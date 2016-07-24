@@ -34,7 +34,7 @@ if (!hyperTerm.exists()) {
 	process.exit(1);
 }
 
-if (program.init) {
+if (program.initialization) {
 	return opn(`https://hyperterm-updates.now.sh/download/osx`, {wait: false});
 }
 

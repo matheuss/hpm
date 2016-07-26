@@ -22,6 +22,7 @@ updateNotifier({pkg}).notify();
 
 program
 	.version(pkg.version)
+	.option('init, initialization', 'Install hyperterm')
 	.option('i, install <plugin>', 'Install a plugin')
 	.option('u, uninstall <plugin>', 'Uninstall a plugin (aliases: rm, remove)')
 	.option('ls, list', 'List installed plugins')
@@ -35,9 +36,13 @@ if (!hyperTerm.exists()) {
 	let msg = chalk.red('You don\'t have HyperTerm installed! :(\n');
 	msg += `${chalk.red('You are missing')} ${chalk.green('awesomeness')}`;
 	msg += chalk.red(`.\n`);
-	msg += chalk.green('Check it out: https://hyperterm.org/');
+	msg += chalk.green('Try hpm init.');
 	console.error(msg);
 	process.exit(1);
+}
+
+if (program.initialization) {
+	return opn(`https://hyperterm-updates.now.sh/download/osx`, {wait: false});
 }
 
 if (program.install) {

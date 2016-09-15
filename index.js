@@ -69,7 +69,7 @@ const lsRemote = () => { // note that no errors are catched by this function
 
 args.command(['s', 'search'], 'Search for plugins on npm', (name, args) => {
 	const spinner = ora('Searching').start();
-	const query = args[0].toLowerCase();
+	const query = args[0] ? args[0].toLowerCase() : ''
 
 	return lsRemote()
 		.then(entries => {

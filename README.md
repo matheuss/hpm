@@ -46,7 +46,7 @@ npm install -g hpm-cli
 - [x] `hpm i hyperpower#1.0.0`
 - [x] `hpm fork hyperpower`
 - [x] `hpm search <query>`
-- [x] `hpm unistall <plugin>`
+- [x] `hpm uninstall <plugin>`
 - [x] `hpm ls`
 
 ## Maybe

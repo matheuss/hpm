@@ -17,10 +17,7 @@
   "engines": {
     "node": ">=4"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/matheuss/hpm.git"
-  },
+  "repository": "zeit/hpm",
   "keywords": [
     "hyperterm",
     "package",
@@ -36,9 +33,9 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/matheuss/hpm/issues"
+    "url": "https://github.com/zeit/hpm/issues"
   },
-  "homepage": "https://github.com/matheuss/hpm#readme",
+  "homepage": "https://github.com/zeit/hpm#readme",
   "dependencies": {
     "args": "^2.0.0",
     "chalk": "^1.1.3",

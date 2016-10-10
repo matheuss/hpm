@@ -96,7 +96,7 @@ args.command(['s', 'search'], 'Search for plugins on npm', (name, args) => {
 		});
 });
 
-args.command(['ls-remote'], 'List plugins available on npm', () => {
+args.command(['lsr', 'list-remote', 'ls-remote'], 'List plugins available on npm', () => {
 	const spinner = ora('Searching').start();
 
 	return lsRemote()

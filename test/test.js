@@ -10,7 +10,6 @@ const fileName = `${homedir()}/.hyper.js`;
 const fileContent = 'module.exports = {plugins: [], localPlugins:[]};';
 let api = require('../api');
 
-// See https://github.com/avajs/eslint-plugin-ava/pull/148
 test.before(async t => {
 	if (api.exists() && !isCi) {
 		// it is ok to have Hyper.app if you are not Travis

@@ -7,6 +7,7 @@ const pify = require('pify');
 const recast = require('recast');
 
 const fileName = `${os.homedir()}/.hyper.js`;
+const oldConf = `${os.homedir()}/.hyperterm.js`;
 
 let fileContents;
 let parsedFile;
@@ -33,6 +34,9 @@ try {
 }
 
 function exists() {
+	if (fs.existsSync(oldConf)) {
+		console.log(`Warning: ${oldConf}` should be `${fileName}`);
+	}
 	return fileContents !== undefined;
 }
 

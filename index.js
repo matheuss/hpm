@@ -35,7 +35,7 @@ args.command(['i', 'install'], 'Install a plugin', (name, args) => {
 		.catch(err => console.error(chalk.red(err)));
 });
 
-args.command(['u', 'uninstall', 'rm', 'remove'], 'Uninstall a plugin', (name, args) => {
+args.command(['u', 'uni', 'uninstall', 'rm', 'remove'], 'Uninstall a plugin', (name, args) => {
 	const plugin = args[0];
 	return api.uninstall(plugin)
 		.then(() => console.log(chalk.green(`${plugin} uninstalled successfully!`)))

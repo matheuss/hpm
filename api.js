@@ -8,17 +8,17 @@ const recast = require('recast');
 
 const fileName = `${os.homedir()}/.hyper.js`;
 
-const normalizeArrayOfStrings = (item) => {
+const normalizeArrayOfStrings = item => {
 	let value;
 	switch (item.type) {
 		case 'TemplateLiteral':
 			value = item.quasis[0].value.raw;
+			break;
 		default :
 			value = item.value;
 	}
-	return { value };
-}
- 
+	return {value};
+};
 
 let fileContents;
 let parsedFile;

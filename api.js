@@ -8,6 +8,18 @@ const recast = require('recast');
 
 const fileName = `${os.homedir()}/.hyper.js`;
 
+const normalizeArrayOfStrings = (item) => {
+	let value;
+	switch (item.type) {
+		case 'TemplateLiteral':
+			value = item.quasis[0].value.raw;
+		default :
+			value = item.value;
+	}
+	return { value };
+}
+ 
+
 let fileContents;
 let parsedFile;
 let plugins;
@@ -21,11 +33,11 @@ try {
 	const properties = parsedFile.program.body[0].expression.right.properties;
 	plugins = properties.find(property => {
 		return property.key.name === 'plugins';
-	}).value.elements;
+	}).value.elements.map(normalizeArrayOfStrings);
 
 	localPlugins = properties.find(property => {
 		return property.key.name === 'localPlugins';
-	}).value.elements;
+	}).value.elements.map(normalizeArrayOfStrings);
 } catch (err) {
 	if (err.code !== 'ENOENT') { // ENOENT === !exists()
 		throw err;

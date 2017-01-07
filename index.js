@@ -158,6 +158,6 @@ args.command(['f', 'fork'], 'Fork a plugin from npm into your ~/.hyper_plugins/l
 
 const flags = args.parse(process.argv);
 
-if (Object.keys(flags).length !== 0) { // Show help when no command is invoked
+if (Object.keys(flags).length === 0) { // Show help when no command is invoked
 	args.showHelp();
 }

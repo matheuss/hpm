@@ -35,7 +35,7 @@ try {
 
 function exists() {
 	if (fs.existsSync(oldConf)) {
-		console.log(`Warning: ${oldConf}` should be `${fileName}`);
+		console.log(`Warning: ${oldConf} should be ${fileName}`);
 	}
 	return fileContents !== undefined;
 }

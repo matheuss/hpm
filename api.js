@@ -17,7 +17,8 @@ try {
 	fileContents = fs.readFileSync(fileName, 'utf8');
 
 	parsedFile = recast.parse(fileContents);
-        const expression = parsedFile.program.body[0].expression;
+
+	const expression = parsedFile.program.body[0].expression;
 	const properties = (expression && expression.right && expression.right.properties) || [];
 	plugins = properties.find(property => {
 		return property.key.name === 'plugins';

@@ -2,6 +2,7 @@
 const fs = require('fs');
 const os = require('os');
 
+const chalk = require('chalk');
 const npmName = require('npm-name');
 const pify = require('pify');
 const recast = require('recast');
@@ -35,7 +36,7 @@ try {
 
 function exists() {
 	if (fs.existsSync(oldConf)) {
-		console.log(`Warning: ${oldConf} should be ${fileName}`);
+		console.log(chalk.yellow(`Warning: ${oldConf} should be ${fileName}`));
 	}
 	return fileContents !== undefined;
 }

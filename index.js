@@ -156,8 +156,9 @@ args.command(['f', 'fork'], 'Fork a plugin from npm into your ~/.hyper_plugins/l
 	});
 });
 
-const flags = args.parse(process.argv, {name: 'hpm'});
+args.parse(process.argv, {name: 'hpm'});
 
-if (Object.keys(flags).length === 0) { // Show help when no command is invoked
+// Show help when no command is invoked
+if (args.raw._.length === 0 || !args.isDefined(args.raw._[0], 'commands')) {
 	args.showHelp();
 }

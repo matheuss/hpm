@@ -10,6 +10,8 @@ const recast = require('recast');
 const fileName = `${os.homedir()}/.hyper.js`;
 const oldConf = `${os.homedir()}/.hyperterm.js`;
 
+// normalizeArrayOfStrings = function item {}
+// `default` assumes 'Literal'. This will return the string of the item
 const normalizeArrayOfStrings = item => {
 	let value;
 	switch (item.type) {
@@ -32,32 +34,51 @@ try {
 
 	parsedFile = recast.parse(fileContents);
 
+	// Grab a list of installed program `plugins` and `localPlugins`:
+	// `plugins` are plugins on npm that can update.
+	// `localPlugins` are plugins locally installed. May not update.
 	const expression = parsedFile.program.body[0].expression;
 	const properties = (expression && expression.right && expression.right.properties) || [];
+	// `Array.find` works by returning first item to match function's `True` state
+	// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/find
+	// `plugins` becomes an array of strings for installed Hyper plugins
 	plugins = properties.find(property => {
 		return property.key.name === 'plugins';
 	}).value.elements.map(normalizeArrayOfStrings);
 
+	// See above
 	localPlugins = properties.find(property => {
 		return property.key.name === 'localPlugins';
 	}).value.elements.map(normalizeArrayOfStrings);
 } catch (err) {
-	if (err.code !== 'ENOENT') { // ENOENT === !exists()
+	// ENOENT === !exists()
+	// Perhaps, but it does not:
+	// a) Check to see if oldConf exists
+	// b) Shoot off proper error message
+	// TODO: Check to see if fileName or oldConf exists()
+	if (err.code !== 'ENOENT') {
 		throw err;
 	}
 }
 
 function exists() {
+	// The following tests to see if `oldConf` file exists, and nothing more
+	// TODO: Check to see if fileName exists
 	if (fs.existsSync(oldConf)) {
+		// TODO: Add specific warning for old config file
 		console.log(chalk.yellow(`Warning: ${oldConf} should be ${fileName}`));
 	}
 	return fileContents !== undefined;
 }
 
 function isInstalled(plugin, locally) {
-	const array = locally ? localPlugins : plugins;
-	if (array && Array.isArray(array)) {
-		return array.find(entry => entry.value === plugin) !== undefined;
+	// TODO: Modify function to search both local and global if `locally` is null
+	// While I know that :101 covers whether or not to search for npm plugins, I believe that it would be best to
+	// search both `localPlugins` and `plugins` for installed modules. While you could pass where to search, by default
+	// it would search both. This should not add any major computation time and will allow code reuse and functionality
+	const array = locally ? localPlugins : plugins; // If locally, then array = localPlugins
+	if (array && Array.isArray(array)) { // If array exists and is in fact an array
+		return array.find(entry => entry.value === plugin) !== undefined; // Find plugin in array's value
 	}
 	return false;
 }
@@ -78,7 +99,7 @@ function existsOnNpm(plugin) {
 }
 
 function install(plugin, locally) {
-	const array = locally ? localPlugins : plugins;
+	const array = locally ? localPlugins : plugins; // If locally, then array = localPlugins
 	return new Promise((resolve, reject) => {
 		existsOnNpm(plugin).then(() => {
 			if (isInstalled(plugin, locally)) {

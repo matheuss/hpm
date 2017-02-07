@@ -4,11 +4,23 @@ const os = require('os');
 
 const chalk = require('chalk');
 const npmName = require('npm-name');
-const pify = require('pify');
-const recast = require('recast');
+const pify = require('pify'); // Library that allows you to call callback style functions as promises
+const recast = require('recast'); // AST parsing library
 
 const fileName = `${os.homedir()}/.hyper.js`;
 const oldConf = `${os.homedir()}/.hyperterm.js`;
+
+const normalizeArrayOfStrings = item => {
+	let value;
+	switch (item.type) {
+		case 'TemplateLiteral':
+			value = item.quasis[0].value.raw;
+			break;
+		default :
+			value = item.value;
+	}
+	return value;
+};
 
 let fileContents;
 let parsedFile;
@@ -77,7 +89,7 @@ function isInstalled(plugin, locally) {
 }
 
 function save() {
-	// Saves `parsedFile` to `fileName`. Again, if any changes were made to plugins or localPlugins, they'll be in this
+	// Saves `parsedFile` to `fileName`. Again, if any changes were made to plugins or localPlugins, they'll be here
 	return pify(fs.writeFile)(fileName, recast.print(parsedFile).code, 'utf8');
 }
 
@@ -125,15 +137,16 @@ function uninstall(plugin) {
 
 		// Remove item from index
 		plugins.splice(index, 1);
-		// Saves the unmodified file
+		// Saves the file with the modified plugins AST list
 		save().then(resolve).catch(err => reject(err));
 	});
 }
 
 function list() {
-	// TODO: Does not currently list
+	// Takes array plugins, normalized strings and joins them as a string
+	// TODO: List local plugins
 	if (Array.isArray(plugins)) {
-		return plugins.map(plugin => plugin.value).join('\n');
+		return plugins.map(normalizeArrayOfStrings).join('\n');
 	}
 	return false;
 }

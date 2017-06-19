@@ -30,11 +30,11 @@ try {
   const expression = parsedFile.program.body[0].expression
   const properties = (expression && expression.right && expression.right.properties) || []
   plugins = properties.find(property => {
-    return property.key.name === 'plugins'
+    return property.key.value === 'plugins'
   }).value.elements
 
   localPlugins = properties.find(property => {
-    return property.key.name === 'localPlugins'
+    return property.key.value === 'localPlugins'
   }).value.elements
 } catch (err) {
   if (err.code !== 'ENOENT') { // ENOENT === !exists()

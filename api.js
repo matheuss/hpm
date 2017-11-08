@@ -3,12 +3,19 @@ const fs = require('fs')
 const os = require('os')
 
 const chalk = require('chalk')
-const npmName = require('npm-name')
 const pify = require('pify')
 const recast = require('recast')
+const got = require('got')
+const tunnel = require('tunnel')
+const registryUrl = require('registry-url')()
 
 const fileName = `${os.homedir()}/.hyper.js`
 const oldConf = `${os.homedir()}/.hyperterm.js`
+
+var hpmproxy = { useProxy : false }
+if (fs.existsSync(`${os.homedir()}/.hpmproxy`)) {
+  hpmproxy = require(`${os.homedir()}/.hpmproxy`).hpmproxy
+}
 
 function getPluginName(item) {
   if (item.type === 'TemplateLiteral') {
@@ -63,14 +70,39 @@ function save() {
 
 function existsOnNpm(plugin) {
   plugin = plugin.split('#')[0]
-  return npmName(plugin).then(available => {
+  if (hpmproxy.useProxy) {
+    var options = {
+      timeout: 10000,
+      agent: tunnel.httpOverHttp({
+        proxy: {
+          host: hpmproxy.proxyHost,
+          port: hpmproxy.proxyPort,
+          proxyAuth: hpmproxy.proxyAuth
+        }
+      })
+    }
+  } else {
+    var options = { timeout : 10000 }
+  }
+  return got.head(registryUrl + plugin.toLowerCase(), options)
+    .then(() => false)
+    .catch(err => {
+      if (err) {
+        const err = new Error(`${plugin} not found on npm`)
+        err.code = 'NOT_FOUND_ON_NPM'
+        throw err
+      }
+    }
+  )
+}
+  /* return npmName(plugin).then(available => {
     if (available) {
       const err = new Error(`${plugin} not found on npm`)
       err.code = 'NOT_FOUND_ON_NPM'
       throw err
     }
-  })
-}
+  }) */
+
 
 function install(plugin, locally) {
   const array = locally ? localPlugins : plugins

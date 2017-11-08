@@ -34,3 +34,17 @@ npm install -g hpm-cli
     -h, --help     Output usage information
     -v, --version  Output the version number
 ```
+
+## Proxy
+`hpm` now supports authenticated proxies. To add proxy settings, create a `.hpmproxy` file in your home directory with the following contents:
+
+```javascript
+var hpmproxy = {
+    proxyHost: 'your.proxy.host.com',
+    proxyPort: 80,
+    proxyAuth: 'username:password',
+    useProxy: true
+}
+module.exports.hpmproxy = hpmproxy
+```
+To disable the proxy, simply set `useProxy` to `false`. 

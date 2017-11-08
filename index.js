@@ -13,9 +13,15 @@ const pify = require('pify')
 const opn = require('opn')
 const ora = require('ora')
 const updateNotifier = require('update-notifier')
+const tunnel = require('tunnel')
 
 const api = require('./api')
 const pkg = require('./package')
+
+var hpmproxy = {useProxy: false}
+if (fs.existsSync(`${os.homedir()}/.hpmproxy`)) {
+  hpmproxy = require(`${os.homedir()}/.hpmproxy`).hpmproxy
+}
 
 updateNotifier({pkg}).notify()
 
@@ -55,16 +61,30 @@ args.command(['ls', 'list'], 'List installed plugins', () => {
 
 const lsRemote = () => { // note that no errors are catched by this function
   const URL = 'http://registry.npmjs.org/-/_view/byKeyword?startkey=[%22hyperterm%22,%22hyper%22]&endkey=[%22hyperterm%22,{}]&group_level=4'
-  return got(URL)
-		.then(response => JSON.parse(response.body).rows)
-		.then(entries => entries.map(entry => entry.key))
-		.then(entries => entries.map(entry => {
-  return {name: entry[1], description: entry[2]}
-}))
-		.then(entries => entries.map(entry => {
-  entry.name = chalk.green(entry.name)
-  return entry
-}))
+  if (hpmproxy.useProxy) {
+    var options = {
+      timeout: 10000,
+      agent: tunnel.httpOverHttp({
+        proxy: {
+          host: hpmproxy.proxyHost,
+          port: hpmproxy.proxyPort,
+          proxyAuth: hpmproxy.proxyAuth
+        }
+      })
+    }
+  } else {
+    var options = {timeout: 10000}
+  }
+    return got(URL, options)
+      .then(response => JSON.parse(response.body).rows)
+      .then(entries => entries.map(entry => entry.key))
+      .then(entries => entries.map(entry => {
+        return {name: entry[1], description: entry[2]}
+    }))
+      .then(entries => entries.map(entry => {
+    entry.name = chalk.green(entry.name)
+    return entry
+  }))
 }
 
 args.command(['s', 'search'], 'Search for plugins on npm', (name, args) => {

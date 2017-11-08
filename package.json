@@ -44,12 +44,13 @@
     "columnify": "^1.5.4",
     "execa": "^0.5.0",
     "file-exists": "^2.0.0",
-    "got": "^6.3.0",
-    "npm-name": "^3.0.0",
+    "got": "^6.7.1",
     "opn": "^4.0.2",
     "ora": "^0.3.0",
     "pify": "^2.3.0",
     "recast": "^0.11.10",
+    "registry-url": "^3.1.0",
+    "tunnel": "0.0.5",
     "update-notifier": "^1.0.2"
   },
   "devDependencies": {

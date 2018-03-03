@@ -27,7 +27,16 @@ try {
 
   parsedFile = recast.parse(fileContents)
 
-  const expression = parsedFile.program.body[0].expression
+  const bodyChunks = parsedFile.program.body
+  const moduleExports = bodyChunks.find(({expression}) => {
+    if (!expression) {
+      return false
+    }
+    const objectName = expression.left.object.name
+    const propertyName = expression.left.property && expression.left.property.name
+    return objectName === 'module' && (propertyName === 'exports')
+  })
+  const expression = moduleExports.expression
   const properties = (expression && expression.right && expression.right.properties) || []
   plugins = properties.find(property => {
     return property.key.name === 'plugins'

@@ -1,3 +1,9 @@
+---
+
+This project was replaced by Hyper's built-in CLI (`hyper`).
+
+---
+
 # hpm [![Build Status](https://travis-ci.org/zeit/hpm.svg?branch=master)](https://travis-ci.org/matheuss/hpm) [![Slack Channel](https://zeit-slackin.now.sh/badge.svg)](https://zeit.chat/) [![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg)](https://github.com/sindresorhus/xo) [![Coverage Status](https://coveralls.io/repos/github/matheuss/hpm/badge.svg?branch=master)](https://coveralls.io/github/matheuss/hpm?branch=master)
 
 

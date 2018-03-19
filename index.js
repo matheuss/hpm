@@ -54,17 +54,17 @@ args.command(['ls', 'list'], 'List installed plugins', () => {
 })
 
 const lsRemote = () => { // note that no errors are catched by this function
-  const URL = 'http://registry.npmjs.org/-/_view/byKeyword?startkey=[%22hyperterm%22,%22hyper%22]&endkey=[%22hyperterm%22,{}]&group_level=4'
+  // TODO: implement pagination
+  const URL = 'https://api.npms.io/v2/search?q=keywords:hyperterm,hyper&size=250'
   return got(URL)
-		.then(response => JSON.parse(response.body).rows)
-		.then(entries => entries.map(entry => entry.key))
-		.then(entries => entries.map(entry => {
-  return {name: entry[1], description: entry[2]}
-}))
-		.then(entries => entries.map(entry => {
-  entry.name = chalk.green(entry.name)
-  return entry
-}))
+    .then(response => JSON.parse(response.body).results)
+    .then(entries => entries.map(entry => {
+      return { name: entry.package.name, description: entry.package.description }
+    }))
+    .then(entries => entries.map(entry => {
+      entry.name = chalk.green(entry.name)
+      return entry
+    }))
 }
 
 args.command(['s', 'search'], 'Search for plugins on npm', (name, args) => {

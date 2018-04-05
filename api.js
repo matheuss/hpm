@@ -58,7 +58,9 @@ function isInstalled(plugin, locally) {
 }
 
 function save() {
-  return pify(fs.writeFile)(fileName, recast.print(parsedFile).code, 'utf8')
+  return pify(fs.writeFile)(fileName, recast.print(parsedFile, {
+    quote: 'single'
+  }).code, 'utf8')
 }
 
 function existsOnNpm(plugin) {
